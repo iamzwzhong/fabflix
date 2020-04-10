@@ -40,7 +40,7 @@ public class MoviesServlet extends HttpServlet {
             // Declare our statement
             Statement statement = dbcon.createStatement();
 
-            String query = "SELECT m.id, m.year, m.title, m.director, tm.rating, ms.actors, mg.genres,ms.starId FROM top_movies AS tm, movies AS m,movie_genres AS mg, movie_stars AS ms WHERE m.id = tm.movieId AND m.id = mg.id AND m.id = ms.id";
+            String query = "SELECT m.id, m.year, m.title, m.director, tm.rating, ms.actors, mg.genres,ms.starId FROM top_movies AS tm, movies AS m,movie_genres AS mg, movie_stars AS ms WHERE m.id = tm.movieId AND m.id = mg.id AND m.id = ms.id ORDER BY tm.rating DESC";
 
             // Perform the query
             ResultSet rs = statement.executeQuery(query);
