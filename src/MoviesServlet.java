@@ -40,7 +40,7 @@ public class MoviesServlet extends HttpServlet {
             // Declare our statement
             Statement statement = dbcon.createStatement();
 
-            String query = "SELECT m.id, m.year, m.title, m.director, tm.rating, ms.actors, mg.genres FROM top_movies AS tm, movies AS m,movie_genres AS mg, movie_stars AS ms WHERE m.id = tm.movieId AND m.id = mg.id AND m.id = ms.id";
+            String query = "SELECT m.id, m.year, m.title, m.director, tm.rating, ms.actors, mg.genres,ms.starId FROM top_movies AS tm, movies AS m,movie_genres AS mg, movie_stars AS ms WHERE m.id = tm.movieId AND m.id = mg.id AND m.id = ms.id";
 
             // Perform the query
             ResultSet rs = statement.executeQuery(query);
@@ -56,7 +56,7 @@ public class MoviesServlet extends HttpServlet {
                 float movies_ratings = rs.getFloat("rating");
                 String movies_actors = rs.getString("actors");
                 String movies_genres = rs.getString("genres");
-
+                String movies_starIds = rs.getString("starId");
 
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
@@ -67,6 +67,7 @@ public class MoviesServlet extends HttpServlet {
                 jsonObject.addProperty("movies_ratings",movies_ratings);
                 jsonObject.addProperty("movies_actors",movies_actors);
                 jsonObject.addProperty("movies_genres",movies_genres);
+                jsonObject.addProperty("movies_starIds",movies_starIds);
 
                 jsonArray.add(jsonObject);
             }
