@@ -1,5 +1,6 @@
-DROP DATABASE moviedb;
-CREATE DATABASE moviedb;
+DROP DATABASE IF EXISTS moviedb;
+CREATE DATABASE moviedb
+	CHARACTER SET utf8;
 USE moviedb;
 
 CREATE TABLE movies(
@@ -59,3 +60,26 @@ CREATE TABLE ratings(
     rating FLOAT NOT NULL,
     numVotes INTEGER NOT NULL
 );
+
+CREATE OR REPLACE VIEW top_movies AS(
+	SELECT ratings.movieId, ratings.rating
+	FROM ratings
+    ORDER BY ratings.rating DESC
+	LIMIT 20);
+
+CREATE OR REPLACE VIEW movie_genres AS(
+	SELECT m.id,
+	substring_index(group_concat(g.name SEPARATOR ','),',',3) as genres
+	FROM movies AS m,genres_in_movies AS gm, genres AS g
+	WHERE gm.movieId = m.id
+	AND gm.genreId = g.id
+	GROUP BY m.id);
+
+CREATE OR REPLACE VIEW movie_stars AS(
+	SELECT m.id,
+	substring_index(group_concat(s.name SEPARATOR ','),',',3) as actors,
+	substring_index(group_concat(s.id SEPARATOR ','),',',3) as starId
+	FROM movies AS m, stars_in_movies AS sm, stars AS s
+	WHERE sm.movieId = m.id
+	AND sm.starId = s.id
+	GROUP BY m.id);

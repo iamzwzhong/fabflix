@@ -14,10 +14,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
-
 // Declaring a WebServlet called StarsServlet, which maps to url "/api/stars"
-@WebServlet(name = "StarsServlet", urlPatterns = "/api/stars")
-public class StarsServlet extends HttpServlet {
+@WebServlet(name = "MoviesServlet", urlPatterns = "/api/movies")
+public class MoviesServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
 
     // Create a dataSource which registered in web.xml
@@ -41,7 +40,7 @@ public class StarsServlet extends HttpServlet {
             // Declare our statement
             Statement statement = dbcon.createStatement();
 
-            String query = "SELECT * from stars";
+            String query = "SELECT m.id, m.year, m.title, m.director, tm.rating, ms.actors, mg.genres FROM top_movies AS tm, movies AS m,movie_genres AS mg, movie_stars AS ms WHERE m.id = tm.movieId AND m.id = mg.id AND m.id = ms.id";
 
             // Perform the query
             ResultSet rs = statement.executeQuery(query);
@@ -50,19 +49,28 @@ public class StarsServlet extends HttpServlet {
 
             // Iterate through each row of rs
             while (rs.next()) {
-                String star_id = rs.getString("id");
-                String star_name = rs.getString("name");
-                String star_dob = rs.getString("birthYear");
+                String movies_id = rs.getString("id");
+                String movies_title = rs.getString("title");
+                int movies_year = rs.getInt("year");
+                String movies_director = rs.getString("director");
+                float movies_ratings = rs.getFloat("rating");
+                String movies_actors = rs.getString("actors");
+                String movies_genres = rs.getString("genres");
+
 
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
-                jsonObject.addProperty("star_id", star_id);
-                jsonObject.addProperty("star_name", star_name);
-                jsonObject.addProperty("star_dob", star_dob);
+                jsonObject.addProperty("movies_id", movies_id);
+                jsonObject.addProperty("movies_title", movies_title);
+                jsonObject.addProperty("movies_year", movies_year);
+                jsonObject.addProperty("movies_director",movies_director);
+                jsonObject.addProperty("movies_ratings",movies_ratings);
+                jsonObject.addProperty("movies_actors",movies_actors);
+                jsonObject.addProperty("movies_genres",movies_genres);
 
                 jsonArray.add(jsonObject);
             }
-            
+
             // write JSON string to output
             out.write(jsonArray.toString());
             // set response status to 200 (OK)
@@ -72,14 +80,14 @@ public class StarsServlet extends HttpServlet {
             statement.close();
             dbcon.close();
         } catch (Exception e) {
-        	
-			// write error message JSON object to output
-			JsonObject jsonObject = new JsonObject();
-			jsonObject.addProperty("errorMessage", e.getMessage());
-			out.write(jsonObject.toString());
 
-			// set reponse status to 500 (Internal Server Error)
-			response.setStatus(500);
+            // write error message JSON object to output
+            JsonObject jsonObject = new JsonObject();
+            jsonObject.addProperty("errorMessage", e.getMessage());
+            out.write(jsonObject.toString());
+
+            // set reponse status to 500 (Internal Server Error)
+            response.setStatus(500);
 
         }
         out.close();
