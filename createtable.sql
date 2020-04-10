@@ -1,6 +1,5 @@
 DROP DATABASE IF EXISTS moviedb;
-CREATE DATABASE moviedb
-	CHARACTER SET utf8;
+CREATE DATABASE moviedb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE moviedb;
 
 CREATE TABLE movies(
