@@ -2,3 +2,28 @@
     background-color:#0e0f11;
     height:100px;
 }
+
+.home_btn{
+    font-family:'Ubuntu',sans-serif;
+    position:absolute;
+    width:150px;
+    height:40px;
+    left:1%;
+    font-size:18px;
+    font-weight:bold;
+    letter-spacing: 1px;
+    border: 3px solid red;
+    background: red;
+    color: black;
+    border-radius: 40px;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all .35s;
+    text-align: center;
+    margin:auto;
+}
+
+.home_btn:hover{
+    background: lightgreen;
+    border:3px lightgreen;
+}
