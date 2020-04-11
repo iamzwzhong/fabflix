@@ -1,7 +1,7 @@
 ## CS 122B Project 1 
 
 ### Demo Video URL
-Link: https://drive.google.com/open?id=1eDQzW0XnEudE9X-PYV2cejQ85PHJIX49
+Link: https://youtu.be/xTdry2Og_kA
 
 ### To run this example (Note: same as instructions given): 
 1. Clone this repository using 
