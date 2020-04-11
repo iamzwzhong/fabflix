@@ -21,6 +21,16 @@ function getParameterByName(target) {
 
 function handleResult(resultData) {
 
+    let movieTitleElement = jQuery("#m_title");
+
+    // append two html <p> created to the h3 body, which will refresh the page
+    movieTitleElement.append("<p> " + resultData[0]["movie_title"] + "</p>");
+
+    let movieYearElement = jQuery("#m_year");
+
+    // append two html <p> created to the h3 body, which will refresh the page
+    movieYearElement.append("<p>Released: " + resultData[0]["movie_year"] + "</p>");
+
     console.log("handleResult: populating star info from resultData");
 
     // populate the movie info h3
@@ -28,9 +38,7 @@ function handleResult(resultData) {
     let movieInfoElement = jQuery("#movie_info");
 
     // append two html <p> created to the h3 body, which will refresh the page
-    movieInfoElement.append("<p>Movie Title: " + resultData[0]["movie_title"] + "</p>" +
-        "<p>Release Year: " + resultData[0]["movie_year"] + "</p>" +
-        "<p>Director: " + resultData[0]["movie_director"] + "</p>" +
+    movieInfoElement.append("<p>Director: " + resultData[0]["movie_director"] + "</p>" +
         "<p>Rating: " + resultData[0]["movie_rating"] + "</p>" +
         "<p>Genres: " + resultData[0]["movie_genre"] + "</p>");
 

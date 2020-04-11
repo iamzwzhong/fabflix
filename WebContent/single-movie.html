@@ -10,9 +10,22 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 
+    <link rel="stylesheet" type = "text/css" href = "./mainstyle.css"/>
+
+    <link rel="stylesheet" type = "text/css" href = "./single-movie.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@800&display=swap" rel="stylesheet">
+
     <title>Single Movie</title>
 </head>
 <body>
+
+<div class="header">
+    <h1 id="m_title"></h1>
+</div>
+
+<div class="header2">
+    <h4 id="m_year"></h4>
+</div>
 
 <!-- H3 body is left empty here, will be populated with the data retrieved with single-star.js -->
 <!-- single-star.js will find this html element by it's id "star_info" -->
@@ -30,7 +43,7 @@
     <!-- single-star.js will find this html element by it's id "movie_table_body" -->
     <tbody id=star_table_body></tbody>
 </table>
-<h1><a href="movies.html" >Go Back</a></h1>
+<h2><a href="movies.html" >Go Back</a></h2>
 
 
 <!-- Load jQuery and Bootstrap JS -->

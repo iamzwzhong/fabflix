@@ -53,6 +53,9 @@ public class StarsServlet extends HttpServlet {
                 String star_id = rs.getString("id");
                 String star_name = rs.getString("name");
                 String star_dob = rs.getString("birthYear");
+                if(star_dob == null){
+                    star_dob = "";
+                }
 
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
