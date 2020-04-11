@@ -1,7 +1,7 @@
 ## CS 122B Project 1 
 
 ### Demo Video URL
-Link: 
+Link: https://drive.google.com/open?id=1eDQzW0XnEudE9X-PYV2cejQ85PHJIX49
 
 ### To run this example (Note: same as instructions given): 
 1. Clone this repository using 
@@ -19,11 +19,13 @@ Zhi Wen Zhong
 ```
 Implemented everything related to movies list
 Implemented half of the tables in createtable.sql and added in convenient views
-Updated README.md and demo
+Updated README.md
+Demo
 ```
 Tyler Foey
 ```
 Implemented everything related to single movie page
 Implemented everything related to single star page
 Implemented half of the tables in createtable.sql
+Demo
 ```
