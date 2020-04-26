@@ -43,7 +43,7 @@ public class SingleMovieServlet extends HttpServlet {
             Connection dbcon = dataSource.getConnection();
 
             // Construct a query with parameter represented by "?"
-            String query = "SELECT * from stars as s, stars_in_movies as sim, movies as m, ratings as r, movie_genres as mg where m.id = sim.movieId and sim.starId = s.id and r.movieId = m.id and m.id = mg.id and m.id = ?";
+            String query = "SELECT * from stars as s, stars_in_movies as sim, movies as m, ratings as r, movie_genres as mg where m.id = sim.movieId and sim.starId = s.id and r.movieId = m.id and m.id = mg.id and m.id = ? ORDER BY (SELECT COUNT(*) AS cnt FROM stars_in_movies AS sim WHERE sim.starId = s.id GROUP BY s.id ORDER BY cnt DESC) DESC, s.name";
 
             // Declare our statement
             PreparedStatement statement = dbcon.prepareStatement(query);
