@@ -39,7 +39,7 @@ function handleCartResult(resultData) {
     let cartTableBodyElement = jQuery("#cart_table_body");
     $("#cart_table_body tr").remove();
     for (let i = 0; i < resultData.length; i++) {
-        total += (parseFloat(resultData[i]["quantity"]) * 4.99).toFixed(2);
+        total += parseFloat(resultData[i]["quantity"]) * 4.99;
         let rowHTML = "";
         rowHTML += "<tr>";
         rowHTML += "<th>" + resultData[i]["movies_title"] + "</th>";
@@ -56,7 +56,7 @@ function handleCartResult(resultData) {
 
     $('button.change').click(updateCart);
     $('button.delete').click(deleteCart);
-    $("#total").text("Total: $"+total);
+    $("#total").text("Total: $"+total.toFixed(2));
 }
 
 jQuery.ajax({
@@ -65,3 +65,28 @@ jQuery.ajax({
     url: "api/cart",
     success: (resultData) => handleCartResult(resultData)
 });
+
+let payment = $('#payment');
+
+function handlePaymentResult(resultDataString) {
+    let resultDataJson = resultDataString;
+
+    if (resultDataJson["status"] === "success") {
+        window.location.replace("confirmation.html");
+    }
+    else {
+        $("#success").text("PLEASE INPUT VALID INFORMATION");
+    }
+}
+
+function handlePaymentInfo(paymentEvent) {
+    paymentEvent.preventDefault();
+
+    $.ajax("api/payment", {
+        method: "POST",
+        data: payment.serialize(),
+        success: handlePaymentResult
+    });
+}
+
+payment.submit(handlePaymentInfo);
