@@ -43,8 +43,13 @@
     <tbody id=star_table_body></tbody>
 </table>
 
-<a href="movies.html" class="home_btn" >Home</a>
-
+<a href="movies.html" class="home_btn" >HOME</a>
+<form ACTION ="#" id="cart" METHOD="get">
+    <input name="quantity" required placeholder="1" type="number" min="1">
+    <button type="submit" class="cart">ADD TO CART</button>
+</form>
+<div id="success"></div>
+<a href="cart.html" class="checkout">CHECKOUT</a>
 
 <!-- Load jQuery and Bootstrap JS -->
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>

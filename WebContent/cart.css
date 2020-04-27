@@ -1,0 +1,63 @@
+body {
+	font-family:'Roboto',sans-serif;
+	text-align:center;
+	background-color:black;
+}
+
+h1 {
+	width:80%;
+	color:red;
+	font-size:140px;
+	text-align:left;
+	margin:5px;
+}
+
+hr {
+	width:100%;
+}
+
+.header {
+	width:100%;
+	color:red;
+	display:flex;
+}
+
+.cart {
+	width:15%;
+	background-color:black;
+}
+
+.container {
+	text-align: left;
+	width:80%;
+	margin: 0 auto;
+	display: table;
+	padding: 8em 0 8em 0;
+	color:grey;
+}
+
+.container th h1 {
+	font-size: 24px;
+	color:#185875;
+}
+
+#total {
+	color:red;
+	font-size:25px;
+	margin:20px;
+}
+
+.payment {
+	color:black;
+	background:red;
+	border:3px solid black;
+	font-size:25px;
+	text-align:right;
+	font-weight:bold;
+	cursor:pointer;
+}
+
+#end {
+	text-align:right;
+	margin:12px;
+}

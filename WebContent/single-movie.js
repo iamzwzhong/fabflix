@@ -83,3 +83,31 @@ jQuery.ajax({
     url: "api/single-movie?id=" + movieId, // Setting request url, which is mapped by StarsServlet in Stars.java
     success: (resultData) => handleResult(resultData) // Setting callback function to handle data returned successfully by the SingleStarServlet
 });
+
+let cart = $('#cart');
+
+function handleCartResult(resultDataString) {
+    let resultDataJson = JSON.parse(resultDataString);
+
+    if (resultDataJson["status"] === "success") {
+        $("#success").text("SUCCESS");
+    }
+    else {
+        $("#success").text("FAILED");
+    }
+}
+
+function handleCartInfo(cartEvent) {
+    cartEvent.preventDefault();
+
+    let data = cart.serializeArray();
+    data.push({name:"id",value:movieId});
+
+    $.ajax("api/addtocart", {
+        method: "POST",
+        data: $.param(data),
+        success: handleCartResult
+    });
+}
+
+cart.submit(handleCartInfo);
