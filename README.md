@@ -1,7 +1,8 @@
-## CS 122B Project 1 
+## CS 122B 
 
 ### Demo Video URL
-Link: https://youtu.be/xTdry2Og_kA
+Project 1: https://youtu.be/xTdry2Og_kA
+Project 2: https://www.youtube.com/watch?v=8G1S9Wchas8
 
 ### To run this example (Note: same as instructions given): 
 1. Clone this repository using 
@@ -14,18 +15,35 @@ Link: https://youtu.be/xTdry2Og_kA
 5. Under `War file to deploy`, select the war file that was built and click deploy
 6. You can now navigate to the website  using the specified URL in the manager app
 
+
+###Substring Matching
+For Searching, user types in input and it goes into query like: "%input%" 
+For Browsing, we used ^[^a-zA-Z0-9] and we used "input%"
+
 ### Contributions
 Zhi Wen Zhong
 ```
+P1
+-----
 Implemented everything related to movies list
 Implemented half of the tables in createtable.sql and added in convenient views
 Updated README.md
-Demo
+
+P2
+-----
+Login/Shopping Cart/Payment/Place Order/Single Pages
+-> Everything related to adding to a cart and checking out
+
 ```
 Tyler Foey
 ```
+P1
+-----
 Implemented everything related to single movie page
 Implemented everything related to single star page
 Implemented half of the tables in createtable.sql
-Demo
+
+P2
+-----
+Searching/Browsing/Movie List/Main Page
 ```
