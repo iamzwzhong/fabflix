@@ -39,10 +39,60 @@ public class MoviesServlet extends HttpServlet {
             // Declare our statement
             Statement statement = dbcon.createStatement();
 
-            String query = "SELECT m.id, m.year, m.title, m.director, tm.rating, ms.actors, mg.genres,ms.starId FROM top_movies AS tm, movies AS m,movie_genres AS mg, movie_stars AS ms WHERE m.id = tm.movieId AND m.id = mg.id AND m.id = ms.id ORDER BY tm.rating DESC";
+            String name = request.getParameter("name");
+            String director = request.getParameter("director");
+            String releaseYear = request.getParameter("releaseYear");
+            String starName = request.getParameter("starName");
+
+            String shown = request.getParameter("shown");
+            String sorting = request.getParameter("sorting");
+
+
+
+            String name1 = "AND m.title like '%" + name + "%' ";
+            String director1 = "AND m.director like '%" + director + "%' ";
+            String starName1 = "AND ms.allactors like '%" + starName + "%' ";
+            String releaseYear1 = "AND m.year = " + releaseYear + " ";
+
+            String basic = "SELECT m.id, m.year, m.title, m.director, ms.actors, mg.genres, ms.starId, r.rating\n" +
+                    "FROM movies m\n" +
+                    "INNER JOIN movie_stars ms ON ms.id = m.id, ratings r, movie_genres mg\n" +
+                    "WHERE mg.id = m.id AND r.movieId = m.id ";
+
+
+            if(!name.equals("")) {
+                basic = basic + name1;
+            }
+
+            if(!director.equals("")) {
+                basic = basic + director1;
+            }
+
+            if(!starName.equals("")) {
+                basic = basic + starName1;
+            }
+
+            if(!releaseYear.equals("")) {
+                basic = basic + releaseYear1;
+            }
+
+            String ending;
+
+            if(sorting.equals("Title")){
+                ending = "ORDER BY m.title, r.rating";
+            }
+            else {
+                ending = "ORDER BY r.rating, m.title";
+            }
+
+            ending = ending + " LIMIT " + shown;
+
+            basic = basic + ending;
+
 
             // Perform the query
-            ResultSet rs = statement.executeQuery(query);
+            ResultSet rs = statement.executeQuery(basic);
+
 
             JsonArray jsonArray = new JsonArray();
 
@@ -80,6 +130,8 @@ public class MoviesServlet extends HttpServlet {
             statement.close();
             dbcon.close();
         } catch (Exception e) {
+
+            System.out.println("HI");
 
             // write error message JSON object to output
             JsonObject jsonObject = new JsonObject();
