@@ -40,6 +40,7 @@ public class MoviesServlet extends HttpServlet {
             // Declare our statement
             Statement statement = dbcon.createStatement();
 
+
             String name = request.getParameter("name");
             String director = request.getParameter("director");
             String releaseYear = request.getParameter("releaseYear");
@@ -48,12 +49,16 @@ public class MoviesServlet extends HttpServlet {
             String shown = request.getParameter("shown");
             String sorting = request.getParameter("sorting");
 
+            String browse = request.getParameter("browse");
+
 
 
             String name1 = "AND m.title like '%" + name + "%' ";
             String director1 = "AND m.director like '%" + director + "%' ";
             String starName1 = "AND ms.allactors like '%" + starName + "%' ";
             String releaseYear1 = "AND m.year = " + releaseYear + " ";
+            String browse1 = "AND m.title like '" + browse + "%' ";
+            String browse2 = "AND m.title REGEXP '^[^a-zA-Z0-9]' ";
 
             String basic = "SELECT m.id, m.year, m.title, m.director, ms.actors, mg.genres, ms.starId, r.rating\n" +
                     "FROM movies m\n" +
@@ -75,6 +80,15 @@ public class MoviesServlet extends HttpServlet {
 
             if(!releaseYear.equals("")) {
                 basic = basic + releaseYear1;
+            }
+
+            if(!browse.equals("none")){
+                if(!browse.equals("*")){
+                    basic = basic + browse1;
+                }
+                else {
+                    basic = basic + browse2;
+                }
             }
 
             String ending;
@@ -131,8 +145,6 @@ public class MoviesServlet extends HttpServlet {
             statement.close();
             dbcon.close();
         } catch (Exception e) {
-
-            System.out.println("HI");
 
             // write error message JSON object to output
             JsonObject jsonObject = new JsonObject();
