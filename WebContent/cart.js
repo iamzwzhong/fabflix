@@ -75,7 +75,7 @@ function handlePaymentResult(resultDataString) {
         window.location.replace("confirmation.html");
     }
     else {
-        $("#success").text("PLEASE INPUT VALID INFORMATION");
+        $("#success").text(resultDataJson["message"]);
     }
 }
 

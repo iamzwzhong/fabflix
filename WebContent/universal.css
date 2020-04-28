@@ -25,3 +25,20 @@
 .home_btn:hover{
     background: orange;
 }
+
+.checkout {
+    color:black;
+    background:red;
+    border:3px solid black;
+    right:18px;
+    font-family:'Ubuntu',sans-serif;
+    width:150px;
+    position:absolute;
+    font-weight:bold;
+    cursor:pointer;
+    text-align:center;
+}
+
+.checkout:hover {
+    background-color:green;
+}

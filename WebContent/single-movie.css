@@ -29,31 +29,12 @@ h4 {
     right:47%;
     font-family:'Ubuntu',sans-serif;
     width:150px;
-    height:40px;
-    line-height:35px;
     font-weight:bold;
     cursor:pointer;
 }
 
 .cart:hover {
     background-color:lightgreen;
-}
-
-.checkout {
-    color:black;
-    background:red;
-    border:3px solid black;
-    right:18px;
-    font-family:'Ubuntu',sans-serif;
-    position:absolute;
-    width:150px;
-    text-align: center;
-    font-weight:bold;
-    cursor:pointer;
-}
-
-.checkout:hover {
-    background-color:green;
 }
 
 #cart{

@@ -7,6 +7,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -82,7 +83,7 @@ public class MoviesServlet extends HttpServlet {
                 ending = "ORDER BY m.title, r.rating";
             }
             else {
-                ending = "ORDER BY r.rating, m.title";
+                ending = "ORDER BY r.rating DESC, m.title";
             }
 
             ending = ending + " LIMIT " + shown;

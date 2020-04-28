@@ -76,9 +76,12 @@ CREATE OR REPLACE VIEW movie_genres AS(
 
 CREATE OR REPLACE VIEW movie_stars AS(
 	SELECT m.id,
-	substring_index(group_concat(s.name SEPARATOR ','),',',3) as actors,
-	substring_index(group_concat(s.id SEPARATOR ','),',',3) as starId
-	FROM movies AS m, stars_in_movies AS sm, stars AS s
+	substring_index(group_concat(smt.name ORDER by smt.cnt DESC, smt.name SEPARATOR ','),',',3) as actors,
+	substring_index(group_concat(smt.id SEPARATOR ','),',',3) as starId
+	FROM movies AS m, stars_in_movies AS sm, 
+	(SELECT s.id, s.name, s.birthYear, mss.cnt FROM stars s
+	INNER JOIN movie_stars_sorted mss ON mss.id = s.id
+	) as smt
 	WHERE sm.movieId = m.id
-	AND sm.starId = s.id
+	AND sm.starId = smt.id
 	GROUP BY m.id);

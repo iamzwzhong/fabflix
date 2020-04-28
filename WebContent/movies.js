@@ -1,5 +1,28 @@
 let searchForm = $("#searchForm");
 
+function handleaddResult(resultDataString) {
+    let resultDataJson = JSON.parse(resultDataString);
+
+    if (resultDataJson["status"] === "success") {
+        alert("Successfully added to cart");
+    }
+    else {
+        alert("Failed to add to cart");
+    }
+}
+
+function addCart() {
+    let str = $(this).attr('id');
+    let data = [{name:"id",value:str},{name:"quantity",value:'1'}];
+    console.log(data);
+
+    $.ajax("api/addtocart", {
+        method: "POST",
+        data: $.param(data),
+        success: (resultData) => handleaddResult(resultData)
+    });
+}
+
 function handleMoviesResult(resultData) {
     console.log("handleMoviesResult: populating movies table from resultData");
 
@@ -24,10 +47,12 @@ function handleMoviesResult(resultData) {
         }
         rowHTML += "</th>";
         rowHTML += "<th>" + resultData[i]["movies_ratings"] + "</th>";
+        rowHTML += "<th>" + '<button id="' + resultData[i]["movies_id"] + '" class="add"' + '>ADD</button>' + "</th>"
         rowHTML += "</tr>";
 
         moviesTableBodyElement.append(rowHTML);
     }
+    $('button.add').click(addCart);
 }
 /*
 jQuery.ajax({
