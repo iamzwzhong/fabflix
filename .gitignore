@@ -1,4 +1,12 @@
-.idea
+Fabflix/.idea
 .DS_Store
-*.iml
-target
+Fablix/*.iml
+Fablix/target
+Fablix/src/RecaptchaConstants.java
+Parser/.idea
+Parser/*.iml
+Parser/target
+Parser/actors.xml
+Parser/casts.xml
+Parser/movies.xml
+Parser/report.txt

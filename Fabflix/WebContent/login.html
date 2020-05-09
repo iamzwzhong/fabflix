@@ -3,6 +3,7 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="login.css"/>
 		<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+		<script src='https://www.google.com/recaptcha/api.js'></script>
 
 	</head>
 	<body>
@@ -15,6 +16,7 @@
 			<form id="login_form" method="post" action="#">
 				<input type="text" placeholder="Email" name="email" required>
 				<input type="password" placeholder="Password" name="pswd" required>
+				<div class="g-recaptcha" data-sitekey="6LeNJvQUAAAAAIqfxEP3zknSKC-3PsvQkQfklcEl"></div>
 				<button type="submit" class="btn">Login</button>
 			</form>
 		</div>

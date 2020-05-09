@@ -1,0 +1,58 @@
+body {
+    background-color : #0e0f11;
+    color : #ffffff
+}
+
+h1 {
+    color: red;
+    font-size: 60px;
+    padding: 50px 0px 0px 0px;
+    vertical-align: middle;
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    margin: 0 auto;
+}
+
+h4 {
+    color: red;
+    font-size: 40px;
+    vertical-align: middle;
+    text-align: center;
+    font-family: 'Open Sans', sans-serif;
+    margin: 0 auto;
+}
+
+.cart {
+    color:black;
+    background:red;
+    border:3px solid black;
+    right:47%;
+    font-family:'Ubuntu',sans-serif;
+    width:150px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+.cart:hover {
+    background-color:lightgreen;
+}
+
+#cart{
+    width:400px;
+    position:relative;
+    margin-left:auto;
+    margin-right:auto;
+    left:50px;
+    display:flex;
+}
+input{
+    width:50px;
+    margin:5px;
+}
+
+#success {
+    color:yellow;
+    margin-left:auto;
+    margin-right:auto;
+    width:100px;
+}

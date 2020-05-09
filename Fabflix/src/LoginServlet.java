@@ -11,6 +11,9 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
+import java.sql.DriverManager;
+import org.jasypt.util.password.StrongPasswordEncryptor;
+
 @WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
 public class LoginServlet extends HttpServlet {
     @Resource(name = "jdbc/moviedb")
@@ -18,6 +21,21 @@ public class LoginServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException {
         PrintWriter out = response.getWriter();
+
+        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+        System.out.println("gRecaptchaResponse=" + gRecaptchaResponse);
+
+        try {
+            RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+        } catch (Exception e) {
+            JsonObject responseJsonObject = new JsonObject();
+            responseJsonObject.addProperty("status","fail");
+            responseJsonObject.addProperty("message","Failed Recaptcha");
+            out.write(responseJsonObject.toString());
+            out.close();
+            return;
+        }
+
         try {
 
             JsonObject responseJsonObject = new JsonObject();
@@ -37,15 +55,14 @@ public class LoginServlet extends HttpServlet {
             }
 
             String password = request.getParameter("pswd");
-            String query1 = String.format("SELECT * from customers where email like '%s' and password like '%s'", email, password);
-            ResultSet rs1 = statement.executeQuery(query1);
+            boolean verify = verifyCredentials(email, password);
 
-            if (rs1.next() == false) {
+            if (verify == false) {
                 responseJsonObject.addProperty("status","fail");
                 responseJsonObject.addProperty("message", "Incorrect Password");
             }
             else {
-                String id = rs1.getString("id");
+                String id = rs.getString("id");
                 request.getSession().setAttribute("user", new User(email,id));
                 responseJsonObject.addProperty("status", "success");
                 responseJsonObject.addProperty("message", "success");
@@ -62,5 +79,36 @@ public class LoginServlet extends HttpServlet {
             response.setStatus(500);
 
         }
+    }
+
+    private static boolean verifyCredentials(String email, String password) throws Exception {
+        String loginUser = "mytestuser";
+        String loginPasswd = "mypassword";
+        String loginUrl = "jdbc:mysql://localhost:3306/moviedb?useSSL=false";
+
+        Class.forName("com.mysql.jdbc.Driver").newInstance();
+        Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+        Statement statement = connection.createStatement();
+
+        String query = String.format("SELECT * from customers where email='%s'", email);
+
+        ResultSet rs = statement.executeQuery(query);
+
+        boolean success = false;
+        if (rs.next()) {
+            // get the encrypted password from the database
+            String encryptedPassword = rs.getString("password");
+
+            // use the same encryptor to compare the user input password with encrypted password stored in DB
+            success = new StrongPasswordEncryptor().checkPassword(password, encryptedPassword);
+        }
+
+        rs.close();
+        statement.close();
+        connection.close();
+
+        System.out.println("verify " + email + " - " + password);
+
+        return success;
     }
 }

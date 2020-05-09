@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<link rel="stylesheet" type="text/css" href="login.css"/>
+		<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+		<script src='https://www.google.com/recaptcha/api.js'></script>
+
+	</head>
+	<body>
+		<div id="header">
+			<h1 class="intro">FABFLIX</h1>
+			<div class="summary">SEARCH, BROWSE, SHOP <br> CHEAP PRICES 'TIL YOU DROP</div>
+		</div>
+		<hr>
+		<div class="container">
+			<form id="login_form" method="post" action="#">
+				<input type="text" placeholder="Email" name="email" required>
+				<input type="password" placeholder="Password" name="pswd" required>
+				<div class="g-recaptcha" data-sitekey="6LeNJvQUAAAAAIqfxEP3zknSKC-3PsvQkQfklcEl"></div>
+				<button type="submit" class="btn">Login</button>
+			</form>
+		</div>
+		<hr>
+		<div id="login_error_message"></div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+		<script src="login.js"></script>
+	</body>
+
+
+
+</html>
