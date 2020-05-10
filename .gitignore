@@ -1,8 +1,8 @@
 Fabflix/.idea
 .DS_Store
-Fablix/*.iml
-Fablix/target
-Fablix/src/RecaptchaConstants.java
+Fabflix/*.iml
+Fabflix/target
+Fabflix/src/RecaptchaConstants.java
 Parser/.idea
 Parser/*.iml
 Parser/target
