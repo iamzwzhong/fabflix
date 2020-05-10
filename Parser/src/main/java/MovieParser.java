@@ -29,18 +29,48 @@ public class MovieParser extends DefaultHandler{
        put("Myst", "Mystery"); put("S.F.", "Sci-Fi"); put("Advt","Adventure"); put("Horr", "Horror");
        put("Romt", "Romance"); put("Comd", "Comedy"); put("Musc", "Musical"); put("Docu", "Documentary");
        put("BioP", "Biography"); put("Ctxx", "Uncategorized"); put("Actn", "Violence"); put("Camp", "Camp");
-       put("ScFi", "Sci-Fi"); put("Cart", "Cartoon");put("Faml", "Family");put("Surl", "Sureal");
-        put("AvGa", "AvantGarde"); put("Hist", "History");
+       put("ScFi", "Sci-Fi"); put("Cart", "Cartoon");put("Faml", "Family");put("Surl", "Surreal");
+       put("AvGa", "AvantGarde"); put("Hist", "History"); put("Disa", "Disaster"); put("Epic", "Epic"); put("Fant", "Fantasy");
+       put("Noir", "Noir"); put("Surr", "Surreal"); put("SciF", "Sci-Fi"); put("Porn", "Porn"); put("CnRb", "Crime");
     }};
     private boolean valid = true;
+    private int movieId;
+    private Map<String, Integer> genreMap = new HashMap<String, Integer>();
+    private Map<String, Integer> movieMap = new HashMap<String, Integer>();
+    private Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/moviedb?useSSL=false", "mytestuser", "mypassword");
 
-    public MovieParser() throws IOException {
+    final int batchSize = 2500;
+    int countMovie = 0;
+    int countGenre = 0;
+
+    String insertMovie = "INSERT INTO movies(id, title, year, director) VALUES (?, ?, ?, ?)";
+    PreparedStatement insertMovieStmt = con.prepareStatement(insertMovie);
+
+    String insertGinMString = "INSERT INTO genres_in_movies(genreId, movieId) VALUES (?, ?)";
+    PreparedStatement insertGinM = con.prepareStatement(insertGinMString);
+
+
+    public MovieParser() throws IOException, SQLException {
     }
 
-    public void runParser() {
+    public void runParser() throws SQLException {
+        con.setAutoCommit(false);
+        setMovieId();
+        buildGenresMap();
+        buildMoviesMap();
         parseDocument();
         pw.close();
-        addMovie();
+
+        insertMovieStmt.executeBatch();
+        con.commit();
+        insertMovieStmt.close();
+
+        insertGinM.executeBatch();
+        con.commit();
+        insertGinM.close();
+
+        con.setAutoCommit(true);
+        con.close();
     }
 
     private void parseDocument() {
@@ -79,9 +109,15 @@ public class MovieParser extends DefaultHandler{
                 else {
                     throw new Exception("Empty Director");
                 }
+            } else if (valid == false) {
+                return;
             } else if (qName.equalsIgnoreCase("film")) {
-                if (valid == true) {
-                    //addMovie(tempMovie);
+                if (tempMovie.getDirector().contains("UnYear")) {
+                        throw new Exception("Not a Director Name");
+                }
+                else if (valid == true) {
+                    addMovie();
+                    checkGenres(tempMovie);
                 }
                 //System.out.println(tempMovie.toString());
             } else if (qName.equalsIgnoreCase("t")) {
@@ -94,12 +130,14 @@ public class MovieParser extends DefaultHandler{
             } else if (qName.equalsIgnoreCase("year")) {
                 tempMovie.setYear(Integer.parseInt(tempVal));
             } else if (qName.equalsIgnoreCase("cat")) {
-                String g = catMap.get(tempVal);
+                String g = catMap.get(tempVal.trim());
                 if (g != null) {
                     tempGenres.add(g);
                 }
                 else {
                     tempGenres.add(tempVal);
+                    String s = String.format("Genre does not match documented codes: %s", tempVal);
+                    throw new Exception(s);
                 }
             } else if (qName.equalsIgnoreCase("cats")) {
                 if (tempGenres.size() == 0) {
@@ -118,16 +156,129 @@ public class MovieParser extends DefaultHandler{
 
     private void addMovie() {
         try {
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/moviedb", "mytestuser", "mypassword");
-            PreparedStatement addMovie = null;
-            Statement stmt=con.createStatement();
-            ResultSet rs=stmt.executeQuery("select * from genres");
-            while(rs.next())
-                System.out.println(rs.getInt(1)+"  "+rs.getString(2));
-            con.close();
+            String x = tempMovie.getTitle().trim() + tempMovie.getYear() + tempMovie.getDirector().trim();
+            if(movieMap.get(x) != null) {
+                String s = String.format("%s, Error: Movie already exists in database", tempMovie.toString());
+                pw.println(s);
+            }
+            else {
+                insertMovieStmt.setString(1,buildMovieId(movieId));
+                insertMovieStmt.setString(2, tempMovie.getTitle());
+                insertMovieStmt.setInt(3,tempMovie.getYear());
+                insertMovieStmt.setString(4,tempMovie.getDirector());
+
+                insertMovieStmt.addBatch();
+                if(++countMovie % batchSize == 0) {
+                    insertMovieStmt.executeBatch();
+                    con.commit();
+                }
+
+                tempMovie.setMovieId(buildMovieId(movieId));
+                movieId++;
+            }
         }
         catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
+    private void setMovieId() {
+        try {
+            PreparedStatement getTop = null;
+            String getTopString = "SELECT max(id) AS max FROM movies";
+
+            getTop = con.prepareStatement(getTopString);
+            ResultSet rs = getTop.executeQuery();
+            con.commit();
+
+
+            while (rs.next())
+                movieId = Integer.parseInt(rs.getString(1).substring(2)) + 1;
+
+            rs.close();
+            getTop.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private String buildMovieId(int mid) {
+            int length = String.valueOf(mid).length();
+            if (length == 6) {
+                return "tt0" + mid;
+            }
+            else {
+                return "tt" + mid;
+            }
+    }
+
+    private void buildGenresMap() {
+        try {
+            PreparedStatement getGenres = null;
+            String getGenresString = "SELECT * FROM genres";
+
+            getGenres = con.prepareStatement(getGenresString);
+            ResultSet rs = getGenres.executeQuery();
+            con.commit();
+
+            while (rs.next())
+                genreMap.put(rs.getString(2),rs.getInt(1));
+            rs.close();
+            getGenres.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void buildMoviesMap() {
+        try {
+            String getMoviesStr = "SELECT title,year,director FROM movies";
+            PreparedStatement getMovies = con.prepareStatement(getMoviesStr);
+            ResultSet rs = getMovies.executeQuery();
+            con.commit();
+
+            while (rs.next()) {
+                String s = rs.getString(1) + rs.getInt(2) + rs.getString(3);
+                movieMap.put(s, 1);
+            }
+            rs.close();
+            getMovies.close();
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private void checkGenres(Movies m) {
+        try {
+            for (int i = 0; i < m.getGenres().size(); i++) {
+                String g = m.getGenres().get(i);
+                if (genreMap.get(g) == null) {
+                    PreparedStatement insertGenreStmt = null;
+                    String insertGenreString = "INSERT INTO genres (id, name) VALUES (? ,?)";
+                    int gid = genreMap.size() + 1;
+                    insertGenreStmt = con.prepareStatement(insertGenreString);
+                    insertGenreStmt.setInt(1, gid);
+                    insertGenreStmt.setString(2,g);
+                    insertGenreStmt.executeUpdate();
+                    con.commit();
+                    insertGenreStmt.close();
+                    genreMap.put(g, gid);
+                }
+                int currGenreId = genreMap.get(g);
+                String mid = m.getMovieId();
+
+                insertGinM.setInt(1,currGenreId);
+                insertGinM.setString(2, mid);
+                insertGinM.addBatch();
+
+                if (++countGenre % batchSize == 0) {
+                    insertGinM.executeBatch();
+                    con.commit();
+                }
+
+            }
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
     /*

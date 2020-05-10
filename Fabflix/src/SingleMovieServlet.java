@@ -43,17 +43,24 @@ public class SingleMovieServlet extends HttpServlet {
             Connection dbcon = dataSource.getConnection();
 
             // Construct a query with parameter represented by "?"
-            String query = "SELECT * from stars as s, stars_in_movies as sim, movies as m, ratings as r, movie_genres as mg where m.id = sim.movieId and sim.starId = s.id and r.movieId = m.id and m.id = mg.id and m.id = ? ORDER BY (SELECT COUNT(*) AS cnt FROM stars_in_movies AS sim WHERE sim.starId = s.id GROUP BY s.id ORDER BY cnt DESC) DESC, s.name";
-
+            String query = "SELECT * from stars as s, stars_in_movies as sim, movies as m, movie_genres as mg where m.id = sim.movieId and sim.starId = s.id and m.id = mg.id and m.id = ? ORDER BY (SELECT COUNT(*) AS cnt FROM stars_in_movies AS sim WHERE sim.starId = s.id GROUP BY s.id ORDER BY cnt DESC) DESC, s.name";
+            String getRating = "SELECT * from ratings where movieId = ?";
             // Declare our statement
             PreparedStatement statement = dbcon.prepareStatement(query);
-
+            PreparedStatement getRatingStmt = dbcon.prepareStatement(getRating);
             // Set the parameter represented by "?" in the query to the id we get from url,
             // num 1 indicates the first "?" in the query
             statement.setString(1, id);
-
+            getRatingStmt.setString(1,id);
             // Perform the query
             ResultSet rs = statement.executeQuery();
+            ResultSet rs1 = getRatingStmt.executeQuery();
+
+            String movieRating = "N/A";
+
+            if (rs1.next()) {
+                movieRating = rs1.getString("rating");
+            }
 
             JsonArray jsonArray = new JsonArray();
 
@@ -71,7 +78,6 @@ public class SingleMovieServlet extends HttpServlet {
                 String movieTitle = rs.getString("title");
                 String movieYear = rs.getString("year");
                 String movieDirector = rs.getString("director");
-                String movieRating = rs.getString("rating");
                 String movie_Genre = rs.getString("genres");
 
                 // Create a JsonObject based on the data we retrieve from rs

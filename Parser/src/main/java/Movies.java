@@ -6,6 +6,7 @@ public class Movies {
     private int year;
     private String director;
     private ArrayList<String> genres = new ArrayList<String>();
+    private String movieId;
 
     public Movies() {
     }
@@ -63,5 +64,13 @@ public class Movies {
         sb.append(".");
 
         return sb.toString();
+    }
+
+    public String getMovieId() {
+        return movieId;
+    }
+
+    public void setMovieId(String movieId) {
+        this.movieId = movieId;
     }
 }
