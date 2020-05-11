@@ -12,6 +12,7 @@ import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Statement;
 
@@ -37,10 +38,6 @@ public class MoviesServlet extends HttpServlet {
             // Get a connection from dataSource
             Connection dbcon = dataSource.getConnection();
 
-            // Declare our statement
-            Statement statement = dbcon.createStatement();
-
-
             String name = request.getParameter("name");
             String director = request.getParameter("director");
             String releaseYear = request.getParameter("releaseYear");
@@ -51,20 +48,17 @@ public class MoviesServlet extends HttpServlet {
 
             String browse = request.getParameter("browse");
 
-
-
-            String name1 = "AND m.title like '%" + name + "%' ";
-            String director1 = "AND m.director like '%" + director + "%' ";
-            String starName1 = "AND ms.allactors like '%" + starName + "%' ";
-            String releaseYear1 = "AND m.year = " + releaseYear + " ";
-            String browse1 = "AND m.title like '" + browse + "%' ";
+            String name1 = "AND m.title like ? ";
+            String director1 = "AND m.director like ? ";
+            String starName1 = "AND ms.allactors like ? ";
+            String releaseYear1 = "AND m.year = ? ";
+            String browse1 = "AND m.title like ? ";
             String browse2 = "AND m.title REGEXP '^[^a-zA-Z0-9]' ";
 
-            String basic = "SELECT m.id, m.year, m.title, m.director, ms.actors, mg.genres, ms.starId, r.rating\n" +
+            String basic = "SELECT m.id, m.year, m.title, m.director, ms.actors, mg.genres, ms.starId\n" +
                     "FROM movies m\n" +
-                    "INNER JOIN movie_stars ms ON ms.id = m.id, ratings r, movie_genres mg\n" +
-                    "WHERE mg.id = m.id AND r.movieId = m.id ";
-
+                    "INNER JOIN movie_stars ms ON ms.id = m.id, movie_genres mg\n" +
+                    "WHERE mg.id = m.id ";
 
             if(!name.equals("")) {
                 basic = basic + name1;
@@ -94,19 +88,44 @@ public class MoviesServlet extends HttpServlet {
             String ending;
 
             if(sorting.equals("Title")){
-                ending = "ORDER BY m.title, r.rating";
+                ending = "ORDER BY m.title, (select r.rating from ratings r where r.movieId = m.id)";
             }
             else {
-                ending = "ORDER BY r.rating DESC, m.title";
+                ending = "ORDER BY (select r.rating from ratings r where r.movieId = m.id) DESC, m.title";
             }
 
             ending = ending + " LIMIT " + shown;
 
             basic = basic + ending;
 
+            PreparedStatement searchMovie = dbcon.prepareStatement(basic);
+            int i = 1;
 
+            if(!name.equals("")) {
+                searchMovie.setString(i,"%" + name + "%");
+            }
+
+            if(!director.equals("")) {
+                searchMovie.setString(i,"%" + director + "%");
+            }
+
+            if(!starName.equals("")) {
+                searchMovie.setString(i,"%" + starName + "%");
+            }
+
+            if(!releaseYear.equals("")) {
+                searchMovie.setInt(i,Integer.parseInt(releaseYear));
+            }
+
+            if(!browse.equals("none")) {
+                if (!browse.equals("*")) {
+                    searchMovie.setString(i,browse + "%");
+                }
+            }
+
+            System.out.println(searchMovie.toString());
             // Perform the query
-            ResultSet rs = statement.executeQuery(basic);
+            ResultSet rs = searchMovie.executeQuery();
 
 
             JsonArray jsonArray = new JsonArray();
@@ -117,10 +136,23 @@ public class MoviesServlet extends HttpServlet {
                 String movies_title = rs.getString("title");
                 int movies_year = rs.getInt("year");
                 String movies_director = rs.getString("director");
-                float movies_ratings = rs.getFloat("rating");
                 String movies_actors = rs.getString("actors");
                 String movies_genres = rs.getString("genres");
                 String movies_starIds = rs.getString("starId");
+
+                String getRating = "SELECT * from ratings where movieId = ?";
+                PreparedStatement getRatingStmt = dbcon.prepareStatement(getRating);
+                getRatingStmt.setString(1,movies_id);
+                ResultSet rs1 = getRatingStmt.executeQuery();
+
+                String movies_ratings = "N/A";
+
+                if (rs1.next()) {
+                    movies_ratings = rs1.getString("rating");
+                }
+
+                rs1.close();
+
 
                 // Create a JsonObject based on the data we retrieve from rs
                 JsonObject jsonObject = new JsonObject();
@@ -142,7 +174,7 @@ public class MoviesServlet extends HttpServlet {
             response.setStatus(200);
 
             rs.close();
-            statement.close();
+            searchMovie.close();
             dbcon.close();
         } catch (Exception e) {
 

@@ -62,6 +62,8 @@ public class SingleMovieServlet extends HttpServlet {
                 movieRating = rs1.getString("rating");
             }
 
+            rs1.close();
+
             JsonArray jsonArray = new JsonArray();
 
             // Iterate through each row of rs
