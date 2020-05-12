@@ -46,9 +46,15 @@ public class PaymentServlet extends HttpServlet {
             }
 
             Connection dbcon = dataSource.getConnection();
-            Statement statement = dbcon.createStatement();
-            String query = String.format("SELECT * FROM creditcards AS cc WHERE cc.id = '%s' and cc.firstName = '%s' and cc.lastName = '%s' and cc.expiration = '%s'",ccard,ccfn,ccln,expdate);
-            ResultSet rs = statement.executeQuery(query);
+            String query = "SELECT * FROM creditcards AS cc WHERE cc.id = ? and cc.firstName = ? and cc.lastName = ? and cc.expiration = ?";
+            PreparedStatement statement = dbcon.prepareStatement(query);
+
+            statement.setString(1,ccard);
+            statement.setString(2,ccfn  );
+            statement.setString(3,ccln);
+            statement.setString(4,expdate);
+
+            ResultSet rs = statement.executeQuery();
             System.out.println("query success");
 
             if (rs.next()) {

@@ -1,8 +1,9 @@
 ## CS 122B 
 
 ### Demo Video URL
-Project 1: https://youtu.be/xTdry2Og_kA
-Project 2: https://www.youtube.com/watch?v=8G1S9Wchas8
+Project 1: https://youtu.be/xTdry2Og_kA \
+Project 2: https://www.youtube.com/watch?v=8G1S9Wchas8 \
+Project 3:
 
 ### To run this example (Note: same as instructions given): 
 1. Clone this repository using 
@@ -16,9 +17,17 @@ Project 2: https://www.youtube.com/watch?v=8G1S9Wchas8
 6. You can now navigate to the website  using the specified URL in the manager app
 
 
-###Substring Matching
+### Substring Matching
 For Searching, user types in input and it goes into query like: "%input%" 
 For Browsing, we used ^[^a-zA-Z0-9] and we used "input%"
+
+### Prepared Statements
+[LoginServlet](Fablflix/src/LoginServlet.java)
+[PaymentServlet](Fablflix/src/PaymentServlet.java)
+[MoviesServlet](Fablflix/src/MoviesServlet.java)
+[SingleMovieServlet](Fablflix/src/SingleMovieServlet.java)
+[SingleStarServlet](Fablflix/src/SingleStarServlet.java)
+
 
 ### Contributions
 Zhi Wen Zhong
@@ -34,6 +43,10 @@ P2
 Login/Shopping Cart/Payment/Place Order/Single Pages
 -> Everything related to adding to a cart and checking out
 
+P3
+-----
+XML Parsing, reCAPTCHA, Password Encryption, Prepared Statement
+
 ```
 Tyler Foey
 ```
@@ -46,4 +59,8 @@ Implemented half of the tables in createtable.sql
 P2
 -----
 Searching/Browsing/Movie List/Main Page
+
+P3
+-----
+HTTPS, Employee Dashboard
 ```

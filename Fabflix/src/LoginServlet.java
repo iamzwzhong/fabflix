@@ -7,11 +7,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 
-import java.sql.DriverManager;
 import org.jasypt.util.password.StrongPasswordEncryptor;
 
 @WebServlet(name = "LoginServlet", urlPatterns = "/api/login")
@@ -41,11 +38,12 @@ public class LoginServlet extends HttpServlet {
             JsonObject responseJsonObject = new JsonObject();
 
             Connection dbCon = dataSource.getConnection();
-            Statement statement = dbCon.createStatement();
 
             String email = request.getParameter("email");
-            String query = String.format("SELECT * from customers where email like '%s'", email);
-            ResultSet rs = statement.executeQuery(query);
+            String query = "SELECT * from customers where email like ?";
+            PreparedStatement statement = dbCon.prepareStatement(query);
+            statement.setString(1,email);
+            ResultSet rs = statement.executeQuery();
 
             if (rs.next() == false) {
                 responseJsonObject.addProperty("status","fail");
@@ -88,11 +86,12 @@ public class LoginServlet extends HttpServlet {
 
         Class.forName("com.mysql.jdbc.Driver").newInstance();
         Connection connection = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
-        Statement statement = connection.createStatement();
 
-        String query = String.format("SELECT * from customers where email='%s'", email);
+        String query = "SELECT * from customers where email=?";
+        PreparedStatement statement = connection.prepareStatement(query);
+        statement.setString(1,email);
 
-        ResultSet rs = statement.executeQuery(query);
+        ResultSet rs = statement.executeQuery();
 
         boolean success = false;
         if (rs.next()) {
