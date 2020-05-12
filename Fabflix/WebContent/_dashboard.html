@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" type="text/css" href="login.css"/>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+</head>
+<body>
+<div id="header">
+    <h1 class="intro">FABFLIX</h1>
+    <div class="summary">SEARCH, BROWSE, SHOP <br> CHEAP PRICES 'TIL YOU DROP</div>
+</div>
+
+<form ID = "addMovieForm" METHOD="GET">
+    Movie Name: <input TYPE="TEXT" name="m_name"><br>
+
+    Director: <input TYPE="TEXT" NAME="director"><br>
+
+    Release Year: <input TYPE="TEXT" NAME="releaseYear"><br>
+
+    Star's Name: <input TYPE="TEXT" NAME="s_name"><br>
+
+    Genre: <input TYPE="TEXT" NAME="genre"><br>
+
+    <input TYPE="SUBMIT" VALUE="Add">
+
+</form>
+
+<form ID = "addForm" METHOD="GET">
+    Star's Name: <input TYPE="TEXT" name="name"><br>
+
+    Birth Year: <input TYPE="TEXT" NAME="birthYear"><br>
+
+    <input TYPE="SUBMIT" VALUE="Add">
+
+</form>
+
+
+<table id=meta_table class="table table-striped container">
+    <!-- Create a table header -->
+    <thead>
+    <tr>
+        <!-- Titles of each column-->
+        <th><h1>Table</h1></th>
+        <th><h1>Attribute</h1></th>
+        <th><h1>Type</h1></th>
+    </tr>
+    </thead>
+    <!-- Table body is left empty here, will be populated with the data retrieved with index.js -->
+    <!-- Again, id "star_table_body" is useful for jQuery to find this html element -->
+    <tbody id=meta_table_body></tbody>
+</table>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="_dashboard.js"></script>
+</body>
+
+
+
