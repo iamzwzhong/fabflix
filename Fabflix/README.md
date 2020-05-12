@@ -22,11 +22,11 @@ For Searching, user types in input and it goes into query like: "%input%"
 For Browsing, we used ^[^a-zA-Z0-9] and we used "input%"
 
 ### Prepared Statements
-[LoginServlet](Fablflix/src/LoginServlet.java)
-[PaymentServlet](Fablflix/src/PaymentServlet.java)
-[MoviesServlet](Fablflix/src/MoviesServlet.java)
-[SingleMovieServlet](Fablflix/src/SingleMovieServlet.java)
-[SingleStarServlet](Fablflix/src/SingleStarServlet.java)
+[LoginServlet](src/LoginServlet.java)
+[PaymentServlet](src/PaymentServlet.java)
+[MoviesServlet](src/MoviesServlet.java)
+[SingleMovieServlet](src/SingleMovieServlet.java)
+[SingleStarServlet](src/SingleStarServlet.java)
 
 
 ### Contributions
