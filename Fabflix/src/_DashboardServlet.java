@@ -154,12 +154,30 @@ public class _DashboardServlet extends HttpServlet {
                         insertStarStmt.setString(4, director);
                         insertStarStmt.setString(5, s_name);
                         insertStarStmt.setString(6, genre);
-                        System.out.println(insertStarStmt);
                         insertStarStmt.executeQuery();
+                        String genre_id  = "select id as max from genres where name = ?";
+                        PreparedStatement gen_id = dbcon.prepareStatement(genre_id);
+                        gen_id.setString(1, genre);
+                        ResultSet rs4 = gen_id.executeQuery();
+                        String g_id = "";
+                        if (rs4.next()) {
+                            g_id = rs4.getString(1);
+                        }
+                        String star_id  = "select id as max from stars where name = ?";
+                        PreparedStatement st_id = dbcon.prepareStatement(star_id);
+                        st_id.setString(1, s_name);
+                        ResultSet rs5 = st_id.executeQuery();
+                        String s_id = "";
+                        if (rs5.next()) {
+                            s_id = rs5.getString(1);
+                        }
+                        String end1 = String.format("Movie added. Movie ID: %s Genre ID: %s Star ID: %s", id2, g_id, s_id);
                         jsonObject.addProperty("status", "success");
-                        jsonObject.addProperty("message", "Movie added.");
+                        jsonObject.addProperty("message", end1);
                         jsonArray.add(jsonObject);
                         rs.close();
+                        rs4.close();
+                        rs5.close();
                     }
                 }
                 r.close();
