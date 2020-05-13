@@ -60,11 +60,11 @@ CREATE TABLE ratings(
     numVotes INTEGER NOT NULL
 );
 
-CREATE OR REPLACE VIEW top_movies AS(
-	SELECT ratings.movieId, ratings.rating
-	FROM ratings
-    ORDER BY ratings.rating DESC
-	LIMIT 20);
+CREATE TABLE employees(
+	email VARCHAR(50) primary key,
+    password VARCHAR(20) NOT NULL,
+    fullname VARCHAR(100)
+);
 
 CREATE OR REPLACE VIEW movie_genres AS(
 	SELECT m.id,
@@ -73,15 +73,22 @@ CREATE OR REPLACE VIEW movie_genres AS(
 	WHERE gm.movieId = m.id
 	AND gm.genreId = g.id
 	GROUP BY m.id);
+    
+CREATE OR REPLACE VIEW movie_stars_sorted AS(
+    SELECT COUNT(*) AS cnt, s.id
+    FROM stars_in_movies AS sim, stars as s
+    WHERE sim.starId = s.id GROUP BY s.id ORDER BY cnt DESC
+);
 
 CREATE OR REPLACE VIEW movie_stars AS(
-	SELECT m.id,
-	substring_index(group_concat(smt.name ORDER by smt.cnt DESC, smt.name SEPARATOR ','),',',3) as actors,
-	substring_index(group_concat(smt.id SEPARATOR ','),',',3) as starId
-	FROM movies AS m, stars_in_movies AS sm, 
-	(SELECT s.id, s.name, s.birthYear, mss.cnt FROM stars s
-	INNER JOIN movie_stars_sorted mss ON mss.id = s.id
-	) as smt
-	WHERE sm.movieId = m.id
-	AND sm.starId = smt.id
-	GROUP BY m.id);
+SELECT m.id,
+substring_index(group_concat(smt.name ORDER by smt.cnt DESC, smt.name SEPARATOR ','),',',3) as actors,
+substring_index(group_concat(smt.name SEPARATOR ','),',',100) as allactors,
+substring_index(group_concat(smt.id SEPARATOR ','),',',3) as starId
+FROM movies AS m, stars_in_movies AS sm, 
+(SELECT s.id, s.name, s.birthYear, mss.cnt FROM stars s
+INNER JOIN movie_stars_sorted mss ON mss.id = s.id
+) as smt
+WHERE sm.movieId = m.id
+AND sm.starId = smt.id
+GROUP BY m.id);
