@@ -3,7 +3,7 @@
 ### Demo Video URL
 Project 1: https://youtu.be/xTdry2Og_kA \
 Project 2: https://www.youtube.com/watch?v=8G1S9Wchas8 \
-Project 3:https://youtu.be/Oa0YFVi3YbE
+Project 3: https://youtu.be/bSIMO2DKPqA
 
 ### To run this example (Note: same as instructions given): 
 1. Clone this repository using 
@@ -62,5 +62,5 @@ Searching/Browsing/Movie List/Main Page
 
 P3
 -----
-HTTPS, Employee Dashboard
+HTTPS, Employee Dashboard, Prepared Statement, Stored Procedure
 ```
