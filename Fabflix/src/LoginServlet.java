@@ -23,7 +23,9 @@ public class LoginServlet extends HttpServlet {
         System.out.println("gRecaptchaResponse=" + gRecaptchaResponse);
 
         try {
-            RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+            if(gRecaptchaResponse != null) {
+                RecaptchaVerifyUtils.verify(gRecaptchaResponse);
+            }
         } catch (Exception e) {
             JsonObject responseJsonObject = new JsonObject();
             responseJsonObject.addProperty("status","fail");
