@@ -10,3 +10,11 @@ Parser/actors.xml
 Parser/casts.xml
 Parser/movies.xml
 ./idea
+Android/*.iml
+Android/.gradle
+Android/local.properties
+Android/.idea
+Android/.DS_Store
+Android/build
+Android/captures
+Android/app/build
