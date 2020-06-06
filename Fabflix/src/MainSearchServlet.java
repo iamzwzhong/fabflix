@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -26,6 +28,7 @@ public class MainSearchServlet extends HttpServlet {
     private Map<String,Integer> stopWords = new HashMap<String,Integer>();
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        long TSStart = System.nanoTime();
         response.setContentType("application/json");
 
         PrintWriter out = response.getWriter();
@@ -41,7 +44,10 @@ public class MainSearchServlet extends HttpServlet {
         }
 
         try {
+            long TJSConnect = System.nanoTime();
             Connection dbcon = dataSource.getConnection();
+            long TJEConnect = System.nanoTime();
+            long TJConnect = TJEConnect - TJSConnect;
 
             String basic = "SELECT m.id, m.year, m.title, m.director, ms.actors, mg.genres, ms.starId\n" +
                     "FROM movies m\n" +
@@ -56,12 +62,15 @@ public class MainSearchServlet extends HttpServlet {
             basic += " IN BOOLEAN MODE)";
             System.out.println(basic);
 
+            long TJSPrep = System.nanoTime();
             PreparedStatement searchMovie = dbcon.prepareStatement(basic);
 
             for (int i =0; i < noSWTokens.size(); i++) {
                 searchMovie.setString(i+1,"+" + noSWTokens.get(i) + "*");
             }
             ResultSet rs = searchMovie.executeQuery();
+            long TJEPrep = System.nanoTime();
+            long TJPrep = TJEPrep-TJSPrep;
 
 
             JsonArray jsonArray = new JsonArray();
@@ -110,8 +119,28 @@ public class MainSearchServlet extends HttpServlet {
             response.setStatus(200);
 
             rs.close();
+
+            long TJSClose = System.nanoTime();
             searchMovie.close();
             dbcon.close();
+            long TJEClose = System.nanoTime();
+            long TJClose = TJEClose - TJSClose;
+
+            long TSEnd = System.nanoTime();
+
+            long TSElapsed = TSEnd - TSStart;
+            long TJElapsed = TJConnect + TJPrep + TJClose;
+
+            String contextPath = getServletContext().getRealPath("/");
+            String filepath = contextPath + "\\tstjlog.txt";
+            File myFile = new File(filepath);
+            myFile.createNewFile();
+            FileWriter fw = new FileWriter(filepath,true);
+            PrintWriter pw = new PrintWriter(fw);
+            String s = String.format("%s %s",TSElapsed,TJElapsed);
+            pw.println(s);
+            pw.close();
+
         } catch (Exception e) {
             System.out.println(e.getMessage());
             // write error message JSON object to output
