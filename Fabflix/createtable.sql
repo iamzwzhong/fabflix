@@ -75,9 +75,9 @@ CREATE OR REPLACE VIEW movie_genres AS(
 	GROUP BY m.id);
     
 CREATE OR REPLACE VIEW movie_stars_sorted AS(
-    SELECT COUNT(*) AS cnt, s.id
-    FROM stars_in_movies AS sim, stars as s
-    WHERE sim.starId = s.id GROUP BY s.id ORDER BY cnt DESC
+	SELECT COUNT(*) AS cnt, sim.starId AS id
+	FROM stars_in_movies AS sim
+    GROUP BY sim.starId ORDER BY cnt DESC
 );
 
 CREATE OR REPLACE VIEW movie_stars AS(
@@ -92,3 +92,9 @@ INNER JOIN movie_stars_sorted mss ON mss.id = s.id
 WHERE sm.movieId = m.id
 AND sm.starId = smt.id
 GROUP BY m.id);
+
+CREATE INDEX idx_starId
+ON stars_in_movies (starId);
+
+CREATE INDEX idx_movieId
+ON stars_in_movies (movieId);

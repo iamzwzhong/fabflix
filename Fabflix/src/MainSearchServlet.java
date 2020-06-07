@@ -49,17 +49,19 @@ public class MainSearchServlet extends HttpServlet {
             long TJEConnect = System.nanoTime();
             long TJConnect = TJEConnect - TJSConnect;
 
-            String basic = "SELECT m.id, m.year, m.title, m.director, ms.actors, mg.genres, ms.starId\n" +
-                    "FROM movies m\n" +
-                    "INNER JOIN movie_stars ms ON ms.id = m.id, movie_genres mg\n" +
-                    "WHERE mg.id = m.id " +
+
+            String basic = "SELECT b.movieId AS id, b.year, b.title, b.director,\n" +
+                    "substring_index(group_concat(b.starId ORDER by b.cnt DESC,b.name ASC, b.starId SEPARATOR ','),',',3) as starId, mg.genres,\n" +
+                    "substring_index(group_concat(b.name ORDER by b.cnt DESC,b.name ASC, b.name SEPARATOR ','),',',3) as actors\n" +
+                    "FROM (SELECT sim.starid, sim.movieId,m.title,m.year,m.director,mss.cnt,s.name from movies m, movie_stars_sorted mss, stars_in_movies sim, stars s\n" +
+                    "WHERE mss.id = sim.starId AND s.id = sim.starId AND m.id = sim.movieId\n" +
                     "AND MATCH(m.title) AGAINST(";
 
             for (int i = 0; i < noSWTokens.size(); i++) {
                 basic += " ? ";
             }
 
-            basic += " IN BOOLEAN MODE)";
+            basic += " IN BOOLEAN MODE)) as b, movie_genres mg WHERE mg.id = b.movieId GROUP BY b.movieId";
             System.out.println(basic);
 
             long TJSPrep = System.nanoTime();
