@@ -1,6 +1,6 @@
 ### To run this example (Note: same as instructions given): 
 1. Clone this repository using 
-`git clone https://github.com/UCI-Chenli-teaching/cs122b-spring20-team-155.git`
+`git clone https://github.com/iamzwzhong/Fabflix.git`
 2. Inside the repository, where the pom.xml file is located, build the war file:
 `mvn package`
 3. Copy your newly built war file:
